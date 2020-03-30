@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h1>Заняття 3</h1>
+      <p>React</p>
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Що таке React і нащо він нам потрібен?</h3>
+      </section>
+
+      <section>
+        <h3>SPA</h3>
+        <aside class="notes">Що це таке? Які переваги для користувача?</aside>
+      </section>
+
+      <section>
+        <h3>Зручно створювати динамічні сторінки</h3>
+      </section>
+
+      <section>
+        <h3>Віртуальний ДОМ</h3>
+        <aside class="notes">Чим відрізняється від звичайного дому? Розкажи про реконсілінг.</aside>
+      </section>
+
+      <section>
+        <h3>Компонентний(модульний) підхід</h3>
+      </section>
+
+      <section>
+        <h3>ВЕЛИИИКА екосистема</h3>
+      </section>
+
+      <section>
+        <h3>Хороше ком'юніті і документація</h3>
+      </section>
+
+      <section>
+        <h3>Гнучкість і варіантивність</h3>
+        <aside class="notes">Плюс і мінус, немає чіткої архітектури проекту, бо Реакт - це просто бібліотека</aside>
+      </section>
+
+<!--      <section>-->
+<!--        <h4>Створення</h4>-->
+<!--<pre><code class="js" data-line-numbers data-trim>-->
+<!--  const strangeObjDontUseThis = new Object();-->
+<!--  const goodObj = {};-->
+<!--  const goodObjWithStuff = {-->
+<!--    name: "Petro",-->
+<!--    age: 28,-->
+<!--    hobbies: ["football", "watching films", "hiking"]-->
+<!--  };-->
+
+<!--  const name = "Stephanie";-->
+<!--  const weight = "55kg";-->
+<!--  const woman = {-->
+<!--    name,-->
+<!--    weight,-->
+<!--  };-->
+<!--</code></pre>-->
+<!--      </section>-->
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Як воно працює?</h3>
+      </section>
+
+            <section>
+              <h4>Рендеримо додаток</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  ReactDOM.render(
+  <h1>Декілька буквочок</h1>,
+  document.getElementById('root')
+);
+</code></pre>
+            </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>JSX</h3>
+      </section>
+
+      <section>
+        <h4>Прості приклади</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const greeting = &lt;h1&gt;Hello, stranger!&lt;/h1&gt;;
+
+  const someNesting = &lt;div&gt;
+    &lt;b&gt;Steve&lt;/b&gt;
+    &lt;span&gt;33&lt;/span&gt;
+&lt;/div&gt;;
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Вставляємо дані</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const name = "Joshua";
+  const greeting = &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
+
+  const age = 33;
+  const toPercent = x => &lt;span&gt;{(x * 100).toFixed(0)}%&lt;/span&gt;;
+  const card = (
+    &lt;div&gt;
+      &lt;div&gt;Age: {age || "None"}&lt;/div&gt;
+      &lt;b&gt;Is old enough: {age > 18 ? "Yes" : "No"}&lt;/b&gt;
+      &lt;em&gt;Luck: {toPercent(Math.random())}&lt;/em&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Атрибути</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const wrapper = &lt;div className="wrapper"&gt;&lt;/div&gt;;
+  const sameWrapper = &lt;div className={"wrapper"}&gt;&lt;/div&gt;;
+
+  const photoUrl = "http://someurl.com/photo/29p3457u6itny328405tb";
+  const photo = &lt;img src={photoUrl} /&gt;;
+</code></pre>
+      </section>
+
+    </section>
+
+
+    <section>
+
+      <section>
+        <h3>Стилізація</h3>
+      </section>
+
+      <section>
+        <h4>CSS/SASS/SCSS</h4>
+<pre><code class="scss" data-line-numbers data-trim>
+  .card {
+    margin: 20px;
+    padding: 5px 15px;
+
+    &__title {
+      font-weight: 600;
+      font-size: 24px;
+    }
+  }
+</code></pre>
+
+<pre><code class="jsx" data-line-numbers data-trim>
+  import "./styles.scss";
+
+  const card = (
+    &lt;div className="card"&gt;
+      &lt;h4 className="card__title"&gt;Card title&lt;/h4&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+
+        <aside class="notes">Переваги і недоліки</aside>
+      </section>
+
+      <section>
+        <h4>CSS Modules</h4>
+<pre><code class="scss" data-line-numbers data-trim>
+  .card {
+    margin: 20px;
+    padding: 5px 15px;
+  }
+
+  .cardTitle {
+    font-weight: 600;
+    font-size: 24px;
+  }
+</code></pre>
+
+        <pre><code class="jsx" data-line-numbers data-trim>
+  import classes from "./styles.module.scss";
+
+  const card = (
+    &lt;div className={classes.card}&gt;
+      &lt;h4 className={classes.cardTitle}&gt;Card title&lt;/h4&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+        <aside class="notes">Переваги і недоліки</aside>
+      </section>
+
+      <section>
+        <h4>CSS-in-JS</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import styled from "styled-components";
+
+  const CardWrapper = styled.div`
+    margin: 20px;
+    padding: 5px 15px;
+  `;
+
+   const CardTitle = styled.h4`
+    font-weight: 600;
+    font-size: 24px;
+  `;
+
+  const card = (
+    &lt;CardWrapper&gt;
+      &lt;CardTitle&gt;Card title&lt;/CardTitle&gt;
+    &lt;/CardWrapper&gt;
+  );
+</code></pre>
+        <aside class="notes">Переваги і недоліки</aside>
+      </section>
+
+    </section>
+
+
+    <section>
+
+      <section>
+        <h3>Компоненти і їх властивості</h3>
+      </section>
+
+      <section>
+        <h4>Використовуємо класи</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  class Hello extends React.Component {
+    render() {
+      return &lt;h1&gt;Hello world!&lt;/h1&gt;;
+    }
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Використовуємо функції</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const Hello = () => &lt;h1&gt;Hello world!&lt;/h1&gt;;
+</code></pre>
+        <aside class="notes">Коли що використовувати?</aside>
+      </section>
+
+      <section>
+        <h4>Пропси</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const Hello = props => &lt;h1&gt;Hello {props.name}!&lt;h1&gt;;
+
+  const Greeting = () => (
+    &lt;div&gt;
+      &lt;Hello name="Steve"&gt;&lt;/Hello&gt;
+      &lt;Hello name="John"&gt;&lt;/Hello&gt;
+      &lt;Hello name="Luis"&gt;&lt;/Hello&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Пропси у класах</h4>
+        <pre><code class="jsx" data-line-numbers data-trim>
+  class Hello extends React.Component {
+    render() {
+      return &lt;h1&gt;Hello {this.props.name}!&lt;h1&gt;;
+    }
+  }
+
+  const Greeting = () => (
+    &lt;div&gt;
+      &lt;Hello name="Steve" /&gt;
+      &lt;Hello name="John" /&gt;
+      &lt;Hello name="Luis" /&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Прокидаємо компоненти в компоненти</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const Layout = props => (
+    &lt;div className="mega-cool-beautiful-wrapper"&gt;
+      {props.children}
+    &lt;/div&gt;
+  );
+
+  const App = () => (
+    &lt;Layout&gt;
+      &lt;h2&gt;Some stuff here&lt;/h2&gt;
+      &lt;h2&gt;Some stuff there&lt;/h2&gt;
+    &lt;/Layout&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>State</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  class Hello extends React.Component {
+    constructor() {
+      this.state = {
+        name: 'John'
+      };
+    }
+
+    someMethod = () => {
+      this.setState({ name: 'Alex' }, () => { /* do some some after setState */ });
+      // OR
+      this.setState(state => ({ name: 'Alex' }));
+    };
+
+    render() {
+      return &lt;h1&gt;Hello {this.state.name}!&lt;h1&gt;;
+    }
+  }
+</code></pre>
+      </section>
+
+
+      <section>
+        <h4>useState</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React, { useState } from "react";
+
+  const Hello = () => {
+    const [name, setName] = useState('John');
+
+    const someFunc = () => setName('Alex');
+
+    return &lt;h1&gt;Hello {name}!&lt;h1&gt;;
+  };
+
+</code></pre>
+      </section>
+
+    </section>
+
+
+
+  </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+    hash: true,
+    dependencies: [
+      {src: 'plugin/markdown/marked.js'},
+      {src: 'plugin/markdown/markdown.js'},
+      {src: 'plugin/highlight/highlight.js'},
+      {src: 'plugin/notes/notes.js', async: true}
+    ]
+  });
+</script>
+</body>
+</html>
