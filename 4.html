@@ -37,13 +37,277 @@
         <h3>Component lifecycle</h3>
       </section>
 
-<!--      <section>-->
-<!--        <h4>Прості приклади</h4>-->
-<!--<pre><code class="jsx" data-line-numbers data-trim>-->
+      <section data-background-image="images/lifecycles.png" data-background-size="contain"></section>
 
-<!--</code></pre>-->
-<!--      </section>-->
+      <section>
+        <h4>constructor</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  constructor(props) {
+    super(props);
+    this.state = { counter: 0 };
+    this.handleClick = this.handleClick.bind(this);
+  }
+</code></pre>
+      </section>
 
+      <section>
+        <h4>render</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  render() {
+    const { data } = this.props;
+    if (!data) return null;
+
+    return (
+      &lt;div className="card"&gt;
+        &lt;h4 className="card__title"&gt;{data.title}&lt;/h4&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>component Did Mount</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  componentDidMount() {
+    fetch('/some-data')
+    .then(data => data.json())
+    .then(data => this.setState({ data }))
+    .catch(console.error)
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>component Did Update</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  componentDidUpdate(prevProps, prevState) {
+    const { isOpen } = this.props;
+    if (isOpen !== prevProps.isOpen) {
+      this.setState({ open: isOpen });
+    }
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>component Will Unmount</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  componentDidUnmount() {
+    this.revokeSubscription();
+  }
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>useEffect</h3>
+      </section>
+
+      <section>
+        <h4>Basic usage</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React, { useEffect } from "react";
+
+  const SomeComponent = () => {
+
+    useEffect(() => {
+      console.log(new Date())
+    });
+
+    return (
+      &lt;div&gt;static&lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Dependant effects</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const SomeComponent = () => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+      console.log(`new count is ${count}`);
+    }, [count]);
+
+    useEffect(() => {
+        // will happen once, like componentDidMount
+    }, []);
+
+    return (
+      &lt;div&gt;
+        &lt;button onClick={() => setCount(count + 1)}&gt;
+          Add one
+        &lt;/button&gt;
+        &lt;p&gt;{count}&lt;/p&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Cleanup effect</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const SomeComponent = () => {
+
+    useEffect(() => {
+      something.subscribe();
+
+      return () => something.unsubscribe();
+    }, []);
+
+    return (
+      &lt;div&gt;
+        <--   Some stuff here   -->
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+    </section>
+
+
+    <section>
+
+      <section>
+        <h3>Events</h3>
+      </section>
+
+      <section>
+        <h4>Simple as it is</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const SomeComponent = () => {
+    const [count, setCount] = useState(0);
+
+    return (
+      &lt;div&gt;
+        &lt;h2&gt;{count}&lt;/h2&gt;
+        &lt;button onClick={() => setCount(count + 1)}&gt;
+          Add one
+        &lt;/button&gt;
+        &lt;button onClick={() => setCount(count - 1)}&gt;
+          Remove one
+        &lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>You can access event</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const SomeComponent = () => {
+    const [name, setName] = useState('');
+
+    return (
+      &lt;div&gt;
+        &lt;input onChange={(e) => setName(e.target.value)} /&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Lists</h3>
+      </section>
+
+      <section>
+        <h4>Basic</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const listOfStuff = [
+    "Five",
+    "Seven",
+    "Eight",
+    "Twelve"
+  ];
+
+  const SomeComponent = () => {
+
+    return (
+      &lt;ul&gt;
+        {listOfStuff.map(name => &lt;li&gt;&lt;{name}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>With keys</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const listOfCountries = [
+    {id: 2, label: 'Germany'},
+    {id: 5, label: 'Ukraine'},
+    {id: 22, label: 'Poland'},
+    {id: 689, label: 'France'},
+  ];
+
+  const SomeComponent = () => {
+    return (
+      &lt;ul&gt;
+        {listOfStuff.map(country => &lt;li key={country.id}&gt;&lt;{country.label}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>With code separation</h4>
+      </section>
+
+      <section>
+        <h4>Countries Item</h4>
+        <pre><code class="jsx" data-line-numbers data-trim>
+  const CountriesItem = ({ country }) => &lt;li&gt;&lt;{country.label}&lt;/li&gt;
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Countries List</h4>
+        <pre><code class="jsx" data-line-numbers data-trim>
+  import CountriesItem from './CountriesItem';
+
+  const CountriesList = ({ countries }) => &lt;ul&gt;
+    {countries.map(country => &lt;CountriesItem key={country.id} country={country} /&gt;)}
+  &lt;/ul&gt;
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Usage</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import CountriesList from 'components/CountriesList';
+
+  const listOfCountries = [
+    {id: 2, label: 'Germany'},
+    {id: 5, label: 'Ukraine'},
+    {id: 22, label: 'Poland'},
+    {id: 689, label: 'France'},
+  ];
+
+  const SomeComponent = () => {
+    return (
+      &lt;div className="some-cool-wrapper"&gt;
+        &lt;CountriesList countries={listOfCountries} /&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
 
     </section>
 
