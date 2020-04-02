@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h1>Заняття 5</h1>
+      <p>React</p>
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Форми</h3>
+      </section>
+
+      <section>
+        <h4>Контрольовані компоненти</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+const someInput = () => {
+  const [value, setValue] = useState('');
+
+  return &lt;input value={value} onChange={e => setValue(e.target.value)} /&gt;
+};
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Неконтрольовані компоненти</h4>
+        <pre><code class="jsx" data-line-numbers data-trim>
+const someInput = () => {
+  const [value, setValue] = useState('');
+
+  return &lt;input onChange={e => setValue(e.target.value)} /&gt;
+};
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Напишемо якусь форму</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+class SimpleForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      formValues: {
+        email: '',
+        firstName: '',
+        lastName: ''
+      },
+    };
+  }
+
+  handleChange = ({ target }) => this.setState({
+    formValues: {
+      ...this.state.formValues,
+      [target.name]: target.type === "checkbox" ? target.checked : target.value,
+    }
+  });
+
+  handleSubmit = e => {
+    e.preventDefault();
+    // dome some stuff here
+  };
+
+  render() {
+    const { formValues } = this.state;
+    return (
+      &lt;form onSubmit={handleSubmit} &gt;
+        &lt;input
+          name="email"
+          value={formValues.email}
+          type="email"
+          onChange={handleChange}
+        /&gt;
+        &lt;input
+          name="firstName"
+          value={formValues.firstName}
+          type="text"
+          onChange={handleChange}
+        /&gt;
+        &lt;input
+          name="lastName"
+          value={formValues.lastName}
+          type="text"
+          onChange={handleChange}
+        /&gt;
+        &lt;button type="submit"&gt;Send&lt;/button&gt;
+      &lt;/form&gt;
+    );
+  }
+}
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Але часто краще буває використати щось готове по типу</h4>
+        <a href="https://github.com/jaredpalmer/formik" target="_blank">Formik</a><br>
+        <a href="https://github.com/redux-form/redux-form" target="_blank">Redux-Form</a>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Реферальні посилання</h3>
+      </section>
+
+      <section>
+        <h4>Any problems, sir?</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React from "react";
+
+  const SomeComponent = () => {
+    setTimeout(() => {
+      const field = document.querySelector('#some-id');
+      field.focus();
+    }, 100);
+
+    return (
+      &lt;div&gt;
+        &lt;input id="some-id" /&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Just use some Refs</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React from "react";
+
+  const SomeComponent = () => {
+    const inputRef = useRef(null);
+
+    React.useEffect(setTimeout(() => {
+      inputRef.current.focus();
+    }, 100), []);
+
+    return (
+      &lt;div&gt;
+        &lt;input ref={inputRef} /&gt;
+      &lt;/div&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>В класах теж можна</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React from "react";
+
+  class SomeComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.inputRef = React.createRef();
+    }
+
+    componentDidMount() {
+      this.inputRef.current.focus();
+    }
+
+    render() {
+      return (
+        &lt;div&gt;
+          &lt;input ref={inputRef} /&gt;
+        &lt;/div&gt;
+      );
+    }
+  }
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>PropTypes, DefaultProps</h3>
+      </section>
+
+      <section>
+        <h4>PropTypes</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React from "react";
+
+  const Input = ({ inputProps, className, label }) => {
+    return (
+      &lt;div className={className}&gt;
+        &lt;label&gt;
+        {label}
+        &lt;input {...inputProps} /&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+    )
+  };
+
+  Input.propTypes = {
+    className: PropTypes.string.isRequired,
+    inputProps: PropTypes.shape({
+      onChange: PropTypes.func.isRequired,
+      value: PropTypes.string.isRequired,
+      placeholder: PropTypes.string.isRequired,
+      required: PropTypes.bool.isRequired,
+    }).isRequired
+  };
+
+</code></pre>
+      </section>
+
+      <section>
+        <h4>DefaultProps</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React from "react";
+
+  const Input = ({ inputProps, className, label }) => {
+    return (
+      &lt;div className={className}&gt;
+        &lt;label&gt;
+        {label}
+        &lt;input {...inputProps} /&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+    )
+  };
+
+  Input.propTypes = {
+    className: PropTypes.string,
+    inputProps: PropTypes.shape({
+      onChange: PropTypes.func.isRequired,
+      value: PropTypes.string.isRequired,
+      placeholder: PropTypes.string.isRequired,
+      required: PropTypes.bool.isRequired,
+    }).isRequired,
+    label: PropTypes.string
+  };
+
+  Input.defaultProps = {
+    className: 'some-default-styling',
+    label: 'Label'
+  };
+
+</code></pre>
+      </section>
+
+    </section>
+
+
+
+  </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+    hash: true,
+    dependencies: [
+      {src: 'plugin/markdown/marked.js'},
+      {src: 'plugin/markdown/markdown.js'},
+      {src: 'plugin/highlight/highlight.js'},
+      {src: 'plugin/notes/notes.js', async: true}
+    ]
+  });
+</script>
+</body>
+</html>
