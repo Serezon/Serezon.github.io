@@ -139,35 +139,6 @@
       </section>
 
       <section>
-        <h4>useReducer</h4>
-<pre><code class="jsx" data-line-numbers data-trim>
-  const initialState = {count: 0};
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case 'increment':
-        return {count: state.count + 1};
-      case 'decrement':
-        return {count: state.count - 1};
-      default:
-        return state;
-    }
-  }
-
-  const Counter = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    return (
-      &lt;&gt;
-        Count: {state.count}
-        &lt;button onClick={() =&gt; dispatch({type: 'decrement'})}&gt;-&lt;/button&gt;
-    &lt;button onClick={() =&gt; dispatch({type: 'increment'})}&gt;+&lt;/button&gt;
-      &lt;/&gt;
-    );
-  }
-</code></pre>
-      </section>
-
-      <section>
         <h4>useMemo/useCallback</h4>
 <pre><code class="jsx" data-line-numbers data-trim>
   import React, { useMemo, useCallback } from 'react';
@@ -192,6 +163,73 @@
     )
   };
 </code></pre>
+      </section>
+
+      <section>
+        <h4>useReducer</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const initialState = {count: 0};
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      default:
+        return state;
+    }
+  }
+
+  const Counter = () => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    return (
+      &lt;&gt;
+        Count: {state.count}
+        &lt;button onClick={() =&gt; dispatch({type: 'decrement'})}&gt;-&lt;/button&gt;
+        &lt;button onClick={() =&gt; dispatch({type: 'increment'})}&gt;+&lt;/button&gt;
+      &lt;/&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Functional programming</h3>
+        <small>Функції, функції, і ще раз функції...</small>
+      </section>
+
+      <section>
+        <h3>Імперативне vs декларативне</h3>
+      </section>
+
+      <section>
+        <h3>Чисті функції</h3>
+        <small>Немає side-effect'ів</small>
+      </section>
+
+      <section>
+        <h3>Прозорість посилань</h3>
+        <small>Той же результат за тих же аргументів</small>
+      </section>
+
+      <section>
+        <h3>Прозорість посилань</h3>
+        <small>Той же результат за тих же аргументів</small>
+      </section>
+
+      <section>
+        <h3>Іммутабельність</h3>
+        <small>Не змінюємо дані, а повертаємо новий екземпляр</small>
+      </section>
+
+      <section>
+        <h3>Декомпозиція</h3>
+        <small>Розбиваємо задачу на дрібні функції, які потім зв'язуємо</small>
       </section>
 
     </section>
