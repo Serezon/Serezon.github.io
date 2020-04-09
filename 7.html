@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h1>Заняття 7</h1>
+      <p>React</p>
+    </section>
+
+    <section>
+
+      <section>
+        <h3>React Context</h3>
+      </section>
+
+      <section>
+        <h4>Об'явлення</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const Ctx = React.createContext(/* default value */)
+
+  const App = () => (
+    &lt;Ctx.Provider value={/* custom value */} &gt;
+      /* Your components here... */
+    &lt;/Ctx.Provider&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Використання в компоненті через Consumer</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import Ctx from 'somewhere';
+
+  const MyComponentLocatedVeryDeep = () => (
+    &lt;div&gt;
+      &lt;Ctx.Consumer&gt;
+        {valueFromContext => (
+          /* stuff that needs context value */
+        )}
+      &lt;/Ctx.Consumer&gt;
+    &lt;/div&gt;
+  );
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Використання в компоненті через useContext</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React, { useContext } from 'react';
+  import Ctx from 'somewhere';
+
+  const MyComponentLocatedVeryDeep = () => {
+    const ctx = useContext(Ctx);
+
+    return (
+      &lt;div&gt;
+        /* wryyyyyyy */
+      &lt;/div&gt;
+    );
+  };
+</code></pre>
+      </section>
+
+    </section>
+
+
+    <section>
+
+      <section>
+        <h3>React Portal</h3>
+      </section>
+
+      <section>
+        <h4>Треба створити контейнер</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  &lt;body&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;div id="modal"&gt;&lt;/div&gt;
+  &lt;/body&gt;
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Використання в компоненті</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import ReactDOM from "react-dom";
+
+  const MyModal = ({ children }) => ReactDOM.createPortal(
+    &lt;div&gt;
+      {children}
+    &lt;/div&gt;,
+    document.getElementById("modal")
+  );
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Правила хуків:</h3>
+        <ul>
+          <ol>1. Викликайте хукі тільки на верхньому рівні</ol>
+          <ol>2. Викликайте хукі тільки з функцій Реакту(компоненти або кастомні хуки)</ol>
+        </ul>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>React Hooks</h3>
+      </section>
+
+      <section>
+        <h4>useReducer</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const initialState = {count: 0};
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      default:
+        return state;
+    }
+  }
+
+  const Counter = () => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    return (
+      &lt;&gt;
+        Count: {state.count}
+        &lt;button onClick={() =&gt; dispatch({type: 'decrement'})}&gt;-&lt;/button&gt;
+    &lt;button onClick={() =&gt; dispatch({type: 'increment'})}&gt;+&lt;/button&gt;
+      &lt;/&gt;
+    );
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>useMemo/useCallback</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import React, { useMemo, useCallback } from 'react';
+
+  import CoolButton from './CoolButton.jsx';
+  import FancyLabel from './FancyLabel.jsx';
+
+  const StuffComponent = ({ a, b, time }) => {
+    const expValue = useMemo(() => countSmth(a, b), [a,b]);
+
+    const onClick = useCallback((e) => {
+      e.preventDefault();
+      console.log(time);
+    }, [time]);
+
+    return (
+      &lt;div&gt;
+        &lt;CoolButton onClick={onClick} /&gt;
+        &lt;FancyLabel text={expValue} /&gt;
+        {children}
+      &lt;/div&gt;
+    )
+  };
+</code></pre>
+      </section>
+
+    </section>
+
+  </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        hash: true,
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/highlight/highlight.js'},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+</script>
+</body>
+</html>
