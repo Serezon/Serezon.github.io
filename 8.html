@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h1>Заняття 8</h1>
+      <p>Redux</p>
+    </section>
+
+    <section>
+
+      <section>
+        <h2>Нащо нам redux?</h2>
+      </section>
+
+      <section>
+        <h2>Основні принципи:</h2>
+      </section>
+
+      <section>
+        <h2>Єдине джерело правди</h2>
+        <small>Весь стан додатку збережний в одному місці - сховищі(Store)</small>
+      </section>
+
+      <section>
+        <h2>Store напряму доступний тільки для читання</h2>
+        <small>Єдиний спосіб його змінити - відправити екшен(Action)</small>
+      </section>
+
+      <section>
+        <h2>Зміни в Store робляться лише з допомогою чистих функцій</h2>
+        <small>Аби визначити як екшени впливають на сховище - пишуться ред'юсери(Reducer)</small>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>React Flow</h3>
+      </section>
+
+
+      <section>
+        <img src="./images/redux-flow.png" alt="Redux Flow" style="max-height: 100vh;">
+      </section>
+
+      <section>
+        <h4>Types and actions</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const GET_MESSAGE = 'GET_MESSAGE';
+  const FETCH_DATA = 'FETCH_DATA';
+
+  const getMessage = {
+    type: GET_MESSAGE
+  };
+  const fetchData = payload => {
+    type: FETCH_DATA,
+    payload,
+  };
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Reducers</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import * as types from './types';
+
+  const defaultState = {
+    items: [],
+    isLoading: false,
+  };
+
+  const itemsReducer = (state = defaultState, action) => {
+    const {type, payload} = action;
+    switch (type) {
+      case types.START_LOAD:
+        return {
+          ...state,
+          isLoading: true
+        };
+
+      case types.FINISH_LOAD:
+        return {
+          ...state,
+          isLoading: true
+        };
+    }
+
+    return state;
+  };
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Combine reducers into store</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const rootReducer = combineReducers({
+    gallery: galleryReducer,
+    shop: shopReducer,
+    user: userReducer,
+    auth: authReducer,
+  });
+        </code></pre>
+      </section>
+
+      <section>
+        <h4>store</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import { createStore } from 'redux';
+  import { provider } from 'react-redux';
+
+  const store = createStore(rootReducer);
+
+  const app = () => (
+    &lt;provider store={store}&gt;
+      ...our app
+    &lt;/provider&gt;
+  );
+
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+
+      <section>
+        <h3>How to interact with store</h3>
+      </section>
+
+      <section>
+        <h4>Through connect</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import { connect } from 'react-redux';
+
+  const MyConnectedComponent = (props) => (
+    // your component that needs data from store
+  );
+
+  const mapStateToProps = (state, ownProps) => ({
+    // state that will go to component
+  });
+
+  const mapDispatchToProps = {
+    // object of actions wrapped in dispatch
+    // or you can use function instead (dispatch) => {// object of actions}
+  };
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Through hooks</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import { useSelector, useStore, useDispatch } from 'react-redux';
+
+  const MyConnectedComponent = (props) => {
+    const dispatch = useDispatch();
+    const store = useStore();
+    console.log(store.getStore());
+    const data = useSelector(getDataSelector);
+    return (
+       // your component that needs data from store
+    );
+  };
+</code></pre>
+      </section>
+
+    </section>
+
+
+
+  </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        hash: true,
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/highlight/highlight.js'},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+</script>
+</body>
+</html>
