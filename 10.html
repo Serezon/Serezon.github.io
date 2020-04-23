@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section>
+      <h1>Заняття 10</h1>
+      <p>Redux Middlewares</p>
+    </section>
+
+    <section>
+
+      <section>
+        <h3>Create and apply middleware</h3>
+      </section>
+
+      <section>
+        <h4>Example middleware</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const myCustomMiddleware = store => next => action => {
+    console.log(store.getState())
+    console.log(action)
+    next(action)
+  }
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Apply middlewares</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import { createStore, applyMiddleware } from 'redux'
+
+  const store = createStore(
+    rootReducer,
+    applyMiddleware(
+      myMiddleware1,
+      coolMiddleware,
+      timeMiddleware,
+    )
+  )
+</code></pre>
+      </section>
+    </section>
+
+    <section>
+
+      <section>
+        <h3>redux-thunk</h3>
+      </section>
+
+      <section>
+        <h4>Create thunk</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  const getDataThunk = payload => async (dispatch, getState) => {
+    dispatch(dataRequestStart(payload));
+
+    try {
+      const data = await fetch(/* someStuffWithData */)
+      dispatch(dataRequestSuccess(data))
+    } catch (e) { dispatch(dataRequestError(e)) }
+  }
+
+</code></pre>
+      </section>
+
+      <section>
+        <h4>Apply thunk middleware</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  import { createStore, applyMiddleware } from 'redux'
+  import thunk from 'redux-thunk'
+
+  const store = createStore(
+    rootReducer,
+    applyMiddleware(
+      thunk,
+    )
+  )
+
+</code></pre>
+      </section>
+
+      <section>
+      <h4>Let's dive into source code</h4>
+<pre><code class="jsx" data-line-numbers data-trim>
+  function createThunkMiddleware(extraArgument) {
+    return ({ dispatch, getState }) => (next) => (action) => {
+      if (typeof action === 'function') {
+        return action(dispatch, getState, extraArgument);
+      }
+
+      return next(action);
+    };
+  }
+
+  const thunk = createThunkMiddleware();
+  thunk.withExtraArgument = createThunkMiddleware;
+
+  export default thunk;
+</code></pre>
+      </section>
+
+    </section>
+
+    <section>
+      <section>
+        <h3>redux-saga</h3>
+      </section>
+      <section>
+        <h4>Simple saga</h4>
+<pre><code class="jsx" data-line-numbers="" data-trim="">
+  function* simpleSaga() {
+    console.log("Hello, world!")
+  }
+        </code></pre>
+      </section>
+
+      <section>
+        <h4>Setup saga middleware</h4>
+<pre><code class="jsx" data-line-numbers="" data-trim="">
+  import { createStore, applyMiddleware } from 'redux'
+  import createSagaMiddleware from 'redux-saga'
+
+  import rootSaga from './sagas'
+
+  const sagaMiddleware = createSagaMiddleware()
+  const store = createStore(
+    reducer,
+    applyMiddleware(sagaMiddleware)
+  )
+  sagaMiddleware.run(rootSaga)
+        </code></pre>
+      </section>
+
+      <section>
+        <h4>Async example</h4>
+<pre><code class="jsx" data-line-numbers="" data-trim="">
+  import { put, takeEvery, all } from 'redux-saga/effects'
+
+  const delay = (ms) => new Promise(res => setTimeout(res, ms))
+
+  // ...
+
+  // Our worker Saga: will perform the async increment task
+  export function* incrementAsync() {
+    yield delay(1000)
+    yield put({ type: 'INCREMENT' })
+  }
+
+  // Our watcher Saga: spawn a new incrementAsync task on each INCREMENT_ASYNC
+  export function* watchIncrementAsync() {
+    yield takeEvery('INCREMENT_ASYNC', incrementAsync)
+  }
+
+  export default function* rootSaga() {
+    yield all([
+      simpleSaga(),
+      watchIncrementAsync()
+    ])
+  }
+        </code></pre>
+      </section>
+    </section>
+
+
+    <section>
+      <section>
+        <h3>connected-react-router</h3>
+        <small>Better save for the next lesson</small>
+      </section>
+    </section>
+
+  </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        hash: true,
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/highlight/highlight.js'},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+</script>
+</body>
+</html>
