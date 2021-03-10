@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link rel="stylesheet" href="css/theme/black.css" />
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css" />
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Заняття 3</h1>
+          <p>JavaScript</p>
+        </section>
+
+        <section>
+          <section>
+            <h3>Робота з Document</h3>
+          </section>
+
+          <section>
+            <h4>Window</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  var abc = 5;
+  function logStuff() { 
+    console.log('stuff');
+  }
+
+  console.log(window.abc); // 5
+  window.logStuff(); // 'stuff'
+  window.setTimeout(logStuff, 1000); // 'stuff'
+  console.log(globalThis); // Window
+</code></pre>
+          </section>
+
+          <section>
+            <h4>DOM</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  console.log(document.documentElement); // html
+  console.log(document.body); // body 
+  console.log(document.head); // head 
+  console.log(document.title); // title сторінки
+  console.log(document.body.childNodes); // NodeList[]
+  
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Як знайти елемент в DOM</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const byId = document.getElementById('some-id')
+  const byIdUsingQuerySelector = document.querySelector('#some-id')
+  const findElementsInElement = byId.querySelector('strong')
+  const byClassname = document.querySelectorAll('.some-class')
+
+  const closestParentThatFits = byClassname.closest('.modal')
+  
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Робота з елементом</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const el = document.querySelector('#some-id')
+  console.log(el.innerHTML) // '<div>1 row</div><div>2 row</div>'
+  console.log(el.outerHTML) // '<div id="some-id"><div>1 row</div><div>2 row</div></div>'
+  div.innerHTML = '<div>No rows for today</div>'
+
+  console.log(el.textContent) // 'No rows for today'
+  el.textContent = 'New info is comming'
+
+  const input = document.querySelector('#input-1')
+  console.log(input.value) // Some value that user entered
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Зміна документу</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const myDiv = document.createElement('div')
+  const textNode = document.createTextNode('My text');
+
+  /*
+    node.append(...) – додає в кінець елемента
+    node.prepend(...) – додає на початок елемента
+    node.before(...) – додає перед елементов
+    node.after(...) – додає після елемента
+    node.replaceWith(...) – замінює елемент
+    node.clone(deep: boolean) - створює копію
+    node.remove(...) - видаляє елемент
+  */
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Стилі</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const el = document.querySelector('.some-id')
+  console.log(el.classList); // ['some-id']
+  /*
+    el.classList.add(...) - додає клас
+    el.classList.remove(...) - видаляє клас
+    el.classList.toggle(...) - "переключає" клас
+    el.classList.contains(...) - перевіряє наявність класу
+  */
+
+  el.style.height = "50px"
+
+  const computed = getComputedStyle(el); // Об'єкт з поточними стилями
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Скролл</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const el = document.querySelector('.some-id')
+  const howMuchFromTop = el.scrollTop
+  const howMuchFromTopPage = window.pageYOffset
+
+  el.scrollBy(0, 50)
+  el.scrollTo(0, 0)
+  el.scrollIntoView()
+  
+
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Події</h3>
+          </section>
+
+          <section>
+            <img src="images/eventflow.png" style="max-height: 60vh" />
+          </section>
+
+          <section>
+            <h4>Як додати чи забрати event listener</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  const button = document.querySelector('#nice-button')
+
+  function onButtonClick(event) {
+    console.log(event.target)
+  }
+
+  // 1
+  button.onclick = onButtonClick
+  button.onclick = null
+
+  // 2
+  button.addEventListener('click', onButtonClick)
+  button.removeEventListener(onButtonClick)
+  
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Як виглядає Event</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  {
+    type: string,
+    target: HTMLElement,
+    currentTarget: HTMLElement
+  }
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Відміна події або її всплиття</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  function onButtonClick(event) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Event Loop</h3>
+          </section>
+
+          <section>
+            <img src="images/eventloop.png" style="max-height: 60vh" />
+          </section>
+
+          <section>
+            <h4>Приклад</h4>
+            <pre><code class="js" data-line-numbers data-trim>
+  console.log('start');
+
+  setTimeout(() => console.log(1));
+
+  Promise.resolve()
+  .then(() => console.log(2));
+
+  console.log('end');
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Як працює браузер</h3>
+          </section>
+
+          <section>
+            <img src="images/how-browsers-work.png" />
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Приклади задачок зі співбесід</h3>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  var arr = [];
+
+  function clear(arr) {
+    arr.push(1);
+    arr = null;
+  }
+
+  clear(arr);
+
+  console.log(arr); 
+
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  var a = 1;
+
+  function f() {
+    a = 3;
+    return;
+  }
+
+  f();
+
+  console.log(a);
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  const a = {
+    prop: 1,
+    func: function() {
+      return this.prop;
+    }
+  };
+
+  const func = a.func;
+  console.log(func())
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  var x = 10;
+
+  function foo() {
+    console.log(x);
+  }
+
+  function bar(funArg) {
+    var x = 20;
+    funArg();
+  }
+
+  bar(foo);
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  function stuff() {
+    const arr = [];
+
+    for (var i = 0; i < 10; i++) {
+      arr.push(
+        function () { return i; }
+      )
+    }
+    
+    return arr.map(x => x())
+  }
+
+  console.log(stuff());
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  function hoist() {
+    a = 20;
+    var b = 100;
+  }
+
+  hoist();
+  console.log(window.a);
+  console.log(window.b);
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  let a = { b: 1 }
+  let c = {}
+  c.__proto__ = a
+
+  delete c.b
+
+  console.log(c.b)
+</code></pre>
+          </section>
+
+          <section>
+            <pre><code class="js" data-line-numbers data-trim>
+  var a = { b:1 };
+  var c = Object.create(a);
+
+  console.log(c.b);
+  delete c.b;
+  console.log(c.b);
+  delete a.b;
+  console.log(c.b);
+
+  a.z = 2;
+  console.log(c.z);
+  c.z = 3;
+  console.log(a.z);
+</code></pre>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        hash: true,
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/highlight/highlight.js" },
+          { src: "plugin/notes/notes.js", async: true },
+        ],
+      });
+    </script>
+  </body>
+</html>
