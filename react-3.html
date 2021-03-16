@@ -120,7 +120,8 @@ class SimpleForm extends React.Component {
       <section>
         <h4>Але часто краще буває використати щось готове по типу</h4>
         <a href="https://github.com/jaredpalmer/formik" target="_blank">Formik</a><br>
-        <a href="https://github.com/redux-form/redux-form" target="_blank">Redux-Form</a>
+        <a href="https://github.com/redux-form/redux-form" target="_blank">Redux-Form</a><br>
+        <a href="https://react-hook-form.com/" target="_blank">React Hook Form</a>
       </section>
 
     </section>
@@ -137,10 +138,10 @@ class SimpleForm extends React.Component {
   import React from "react";
 
   const SomeComponent = () => {
-    setTimeout(() => {
+    React.useEffect(() => setTimeout(() => {
       const field = document.querySelector('#some-id');
       field.focus();
-    }, 100);
+    }, 100), []);
 
     return (
       &lt;div&gt;
@@ -159,7 +160,7 @@ class SimpleForm extends React.Component {
   const SomeComponent = () => {
     const inputRef = useRef(null);
 
-    React.useEffect(setTimeout(() => {
+    React.useEffect(() => setTimeout(() => {
       inputRef.current.focus();
     }, 100), []);
 
