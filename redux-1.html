@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link rel="stylesheet" href="css/theme/black.css" />
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css" />
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Заняття 1</h1>
+          <p>Redux</p>
+        </section>
+
+        <section>
+          <section>
+            <h2>Нащо нам redux?</h2>
+          </section>
+
+          <section>
+            <h2>Основні принципи:</h2>
+          </section>
+
+          <section>
+            <h2>Єдине джерело правди</h2>
+            <small
+              >Весь стан додатку збережний в одному місці -
+              сховищі(Store)</small
+            >
+          </section>
+
+          <section>
+            <h2>Store напряму доступний тільки для читання</h2>
+            <small>Єдиний спосіб його змінити - відправити екшен(Action)</small>
+          </section>
+
+          <section>
+            <h2>Зміни в Store робляться лише з допомогою чистих функцій</h2>
+            <small
+              >Аби визначити як екшени впливають на сховище - пишуться
+              ред'юсери(Reducer)</small
+            >
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>React Flow</h3>
+          </section>
+
+          <section>
+            <img
+              src="./images/redux-flow.png"
+              alt="Redux Flow"
+              style="max-height: 60vh;"
+            />
+          </section>
+
+          <section>
+            <h4>Types and actions</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  const GET_MESSAGE = 'GET_MESSAGE';
+  const FETCH_DATA = 'FETCH_DATA';
+
+  const getMessage = {
+    type: GET_MESSAGE
+  };
+  const fetchData = payload => {
+    type: FETCH_DATA,
+    payload,
+  };
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Reducers</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import * as types from './types';
+
+  const defaultState = {
+    items: [],
+    isLoading: false,
+  };
+
+  const itemsReducer = (state = defaultState, action) => {
+    const {type, payload} = action;
+    switch (type) {
+      case types.START_LOAD:
+        return {
+          ...state,
+          isLoading: true
+        };
+
+      case types.FINISH_LOAD:
+        return {
+          ...state,
+          isLoading: true
+        };
+    }
+
+    return state;
+  };
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Combine reducers into store</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  const rootReducer = combineReducers({
+    gallery: galleryReducer,
+    shop: shopReducer,
+    user: userReducer,
+    auth: authReducer,
+  });
+        </code></pre>
+          </section>
+
+          <section>
+            <h4>store</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createStore } from 'redux';
+  import { provider } from 'react-redux';
+
+  const store = createStore(rootReducer);
+
+  const app = () => (
+    &lt;provider store={store}&gt;
+      ...our app
+    &lt;/provider&gt;
+  );
+
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>How to interact with store</h3>
+          </section>
+
+          <section>
+            <h4>Through connect</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { connect } from 'react-redux';
+
+  const MyConnectedComponent = (props) => (
+    // your component that needs data from store
+  );
+
+  const mapStateToProps = (state, ownProps) => ({
+    // state that will go to component
+  });
+
+  const mapDispatchToProps = {
+    // object of actions wrapped in dispatch
+    // or you can use function instead (dispatch) => {// object of actions}
+  };
+
+  export default connect(mapStateToProps, mapDispatchToProps)(MyConnectedComponent)
+</code></pre>
+          </section>
+
+          <section>
+            <h4>Through hooks</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { useSelector, useStore, useDispatch } from 'react-redux';
+
+  const MyConnectedComponent = (props) => {
+    const dispatch = useDispatch();
+    const store = useStore();
+    console.log(store.getStore());
+    const data = useSelector(getDataSelector);
+    return (
+       // your component that needs data from store
+    );
+  };
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>redux-actions</h3>
+          </section>
+
+          <section>
+            <h4>createAction</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createAction } from 'redux-actions';
+
+  import types from './types';
+
+  const getSomething = createAction(types.GET_SOMETHING);
+  const getSomething = createAction(
+    types.GET_SOMETHING,
+    data => data,
+    meta => meta,
+  );
+
+</code></pre>
+          </section>
+
+          <section>
+            <h4>createActions</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createActions } from 'redux-actions';
+
+  import types from './types';
+
+  const actions = createActions(
+    types.GET_SOMETHING,
+    types.CREATE_SOMETHING,
+  );
+  const actions = createActions(
+    {
+      [types.SOME_SOMETHING]: (payload) => payload,
+      [types.SOME_SOMETHING_MORE]: [
+        (payload) => payload,
+        (meta) => meta,
+      ],
+    },
+    types.GET_SOMETHING,
+    types.CREATE_SOMETHING,
+  );
+
+</code></pre>
+          </section>
+
+          <section>
+            <h4>handleActions</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { handleActions } from 'redux-actions';
+
+  import types from './types';
+
+  const reducer = handleActions({
+    [types.SOME_ACTION]: (state, action) => ({/* new state */})
+  }, {
+    isLoading: false,
+    list: [],
+    id: null,
+  });
+
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Selectors with reselect</h3>
+          </section>
+
+          <section>
+            <h4>createSelector</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createSelector } from 'reselect';
+
+  const getMessagesList = (state) => state.messenger.messagesList;
+  const getMessagesListSelector = createSelector(
+    getMessagesList,
+    messages => messages,
+  );
+
+</code></pre>
+          </section>
+
+          <section>
+            <h4>createSelector</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createSelector } from 'reselect';
+  import * as R from 'ramda';
+
+  const getMessagesList = R.path(['messenger', 'messagesList']);
+  const getMessagesListSelector = createSelector(
+    getMessagesList,
+    R.identity,
+  );
+
+</code></pre>
+          </section>
+
+          <section>
+            <h4>createSelector with argument</h4>
+            <pre><code class="jsx" data-line-numbers data-trim>
+  import { createSelector } from 'reselect';
+  import * as R from 'ramda';
+
+  const getMessagesList = R.path(['messenger', 'messagesList']);
+  const getMessagesListSelector = createSelector(
+    getMessagesList,
+    R.identity,
+  );
+
+  const getMessageById = createSelector(
+    getMessagesListSelector,
+    messages => R.memoizeWith(
+      identity,
+      messageId => R.prop(messageId, messages)
+    ),
+  );
+</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>redux-persist</h3>
+          </section>
+          <section>
+            <h4>Configure store</h4>
+            <pre><code class="jsx" data-line-numbers="" data-trim="">
+  import { createStore } from 'redux'
+  import { persistStore, persistReducer } from 'redux-persist'
+  import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+
+  import rootReducer from './reducers'
+
+  const persistConfig = {
+    key: 'root',
+    storage,
+  }
+
+  const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+  export default () => {
+    const store = createStore(persistedReducer)
+    const persistor = persistStore(store)
+    return { store, persistor }
+}
+        </code></pre>
+          </section>
+          <section>
+            <h4></h4>
+            <pre><code class="jsx" data-line-numbers="" data-trim="">
+const App = () => {
+  return (
+    &lt;Provider store={store}&gt;
+      &lt;PersistGate loading={null} persistor={persistor} &gt;
+        &lt;RootComponent /&gt;
+      &lt;/PersistGate&gt;
+    &lt;/Provider&gt;
+  );
+};
+        </code></pre>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        hash: true,
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/highlight/highlight.js" },
+          { src: "plugin/notes/notes.js", async: true },
+        ],
+      });
+    </script>
+  </body>
+</html>
